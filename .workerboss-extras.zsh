@@ -1,6 +1,6 @@
-# workerboss-extras.zsh — shell pessoal carregado pelo .zprofile-auto (Worker Boss)
+# .workerboss-extras.zsh — shell pessoal carregado pelo .zprofile-auto (Worker Boss)
 #
-# Configuração: em ~/workerboss.yml define shell.extras_source com o caminho deste ficheiro.
+# Configuração: em ~/.workerboss.yml usa shell.extras_source (lista) com o caminho deste ficheiro.
 # Não dupliques aqui o que já está nos workerboss.yml dos projetos (Docker, testes, etc.).
 #
 # Exemplos do que costuma ir aqui: clone_repo, aliases multi-repo, multiplier-*, update, NVM.

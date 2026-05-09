@@ -1,6 +1,6 @@
 # workerboss-extras
 
-Repositório **pessoal** de shell (Zsh) que complementa o [Worker Boss](https://github.com/CeruttiMaicon/worker-boss): normalmente começas por um ficheiro principal (`workerboss-extras.zsh`), mas podes partir o shell em **vários** `.zsh` e listá-los todos em `shell.extras_source` no `~/workerboss.yml` — o Worker Boss gera um `source` por ficheiro, **na ordem da lista**.
+Repositório **pessoal** de shell (Zsh) que complementa o [Worker Boss](https://github.com/CeruttiMaicon/worker-boss): o conteúdo principal costuma ir em **`.workerboss-extras.zsh`** (ficheiro oculto); podes acrescentar outros **`.zsh` ocultos** (ex.: `.workerboss-local.zsh` só para esta máquina) e listar **todos** em `shell.extras_source` no **`~/.workerboss.yml`** — o Worker Boss gera um `source` por entrada, **na ordem da lista**.
 
 ---
 
@@ -10,23 +10,23 @@ O Worker Boss é a ferramenta que corre no teu PC (menu Whiptail, `worker_boss.s
 
 | Camada | Onde fica | O que guardas |
 |--------|-----------|-----------------|
-| **1. Config global** | `~/workerboss.yml` na tua home | Pasta dos projetos (`projects.dir`), pastas a ignorar, e `shell.extras_source`: **uma string** (um path) ou **uma lista** (vários paths, por ordem de carga). |
-| **2. Por repositório** | `workerboss.yml` dentro de cada projeto (ex.: `srp/`, `VoleiClub/`) | Atalhos de trabalho daquele app: Docker, testes interativos, recriar ambiente, helpers tipo `srp-helper`, etc. |
-| **3. Extras pessoais** | Este repo (um ou mais `.zsh`) | Coisas **tuas**: `clone_repo`, atalhos para vários clones, `multiplier-*`, `update`, NVM/Go, caminhos da máquina, etc. Podes separar por tema (ex.: `extras-git.zsh`, `extras-work.zsh`). |
+| **1. Config global** | **`~/.workerboss.yml`** (oculto, na home) | `projects.dir`, `ignore_dirs`, e **`shell.extras_source`** como **lista** de paths para ficheiros Zsh. |
+| **2. Por repositório** | `workerboss.yml` dentro de cada projeto (ex.: `srp/`, `VoleiClub/`) | Atalhos daquele app: Docker, testes, recreate, helpers, etc. |
+| **3. Extras pessoais** | Este repo — vários **`.zsh` ocultos** | `clone_repo`, aliases multi-repo, `multiplier-*`, `update`, NVM/Go, etc. Separa por ficheiro (ex.: principal + `.workerboss-local.zsh` não partilhado ou vazio no git). |
 
-O Worker Boss **não** executa o `workerboss-extras.zsh` sozinho. O fluxo é:
+O Worker Boss **não** executa os teus `.zsh` sozinho. O fluxo é:
 
-1. Editas `~/workerboss.yml` e defines `shell.extras_source` com um caminho (string) ou uma **lista** de caminhos (absoluto ou `~`). Cada entrada vira um `source` no `.zprofile-auto`, pela mesma ordem.
-2. No Worker Boss escolhes **Gerar .zprofile-auto** (ou corres a função equivalente a partir do script).
-3. O gerador lê todos os `workerboss.yml` sob `projects.dir`, monta funções com os nomes dos atalhos, e **no fim** do ficheiro gerado acrescenta, para cada path em `extras_source`, um bloco do género: se o ficheiro existir e for legível, faz `source`.
-4. O teu Zsh carrega `~/.zprofile-auto` (normalmente via `~/.zshrc`, conforme o [README do Worker Boss](https://github.com/CeruttiMaicon/worker-boss/blob/main/README.md)). Na primeira parte tens o que veio dos YAMLs; na última parte, os teus extras (um ou vários, em sequência).
+1. Em **`~/.workerboss.yml`** defines `shell.extras_source` como **lista** de caminhos (`~` ou absoluto). Cada entrada vira um `source` no `.zprofile-auto`, pela mesma ordem.
+2. No Worker Boss: **Gerar .zprofile-auto** (ou a função equivalente no script).
+3. O gerador lê os `workerboss.yml` dos projetos, monta as funções dos atalhos e, **no fim**, para cada path em `extras_source`, um bloco `if [ -r … ]; then . …; fi`.
+4. O Zsh carrega `~/.zprofile-auto` (normalmente via `~/.zshrc`). Primeiro o gerado; depois os teus ficheiros, **na ordem da lista**.
 
-Ordem de carregamento: **primeiro** o conteúdo gerado a partir dos projetos, **depois** os ficheiros de extras **na ordem em que aparecem na lista** (ou o único ficheiro se usaste string). Ficheiros listados mais tarde podem usar ou redefinir o que ficheiros anteriores definiram. Isto evita editar o `.zprofile-auto` gerado (ele é sobrescrito sempre que gerares de novo).
+Ficheiros mais abaixo na lista podem usar ou redefinir o que os anteriores definiram. O `.zprofile-auto` continua gerado — não o edites à mão.
 
 ```mermaid
 flowchart LR
   subgraph home [Home]
-    WB_YAML["~/workerboss.yml"]
+    WB_YAML["~/.workerboss.yml"]
     ZPA["~/.zprofile-auto"]
   end
   subgraph projects [Pasta projects.dir]
@@ -34,7 +34,7 @@ flowchart LR
     PY2["projeto-b/workerboss.yml"]
   end
   subgraph personal [Repo pessoal]
-    EX["extras .zsh"]
+    EX[".zsh ocultos"]
   end
   WB["Worker Boss\nGerar .zprofile-auto"]
   ZSH["Zsh login / source"]
@@ -42,19 +42,19 @@ flowchart LR
   PY1 --> WB
   PY2 --> WB
   WB --> ZPA
-  WB_YAML -->|"shell.extras_source\nstring ou lista"| ZPA
-  EX -->|"source(s) no fim"| ZPA
+  WB_YAML -->|"shell.extras_source lista"| ZPA
+  EX -->|"source no fim"| ZPA
   ZPA --> ZSH
 ```
 
-**Atenção ao YAML:** a chave `shell` deve estar no **mesmo nível** que `projects` no `~/workerboss.yml`, não indentada *dentro* de `projects`. Se `shell` ficar aninhado em `projects`, o Worker Boss (versões antigas) pode não encontrar `extras_source` e o `.zprofile-auto` sai sem o bloco de extras. Versões recentes do `worker_boss.sh` também aceitam `projects.shell.extras_source` como compatibilidade, mas o recomendado é `shell` na raiz.
+**YAML:** `shell` tem de estar no **mesmo nível** que `projects`, nunca indentado *dentro* de `projects`.
 
 ---
 
 ## Configuração rápida
 
 1. Clona este repo (ex.: `~/Projects/workerboss-extras`).
-2. No `~/workerboss.yml`:
+2. No **`~/.workerboss.yml`**:
 
 ```yaml
 projects:
@@ -62,11 +62,9 @@ projects:
   ignore_dirs: []
 
 shell:
-  extras_source: "~/Projects/workerboss-extras/workerboss-extras.zsh"
-  # Vários ficheiros (ordem = ordem de carga):
-  # extras_source:
-  #   - "~/Projects/workerboss-extras/workerboss-extras.zsh"
-  #   - "~/Projects/workerboss-extras/outro.zsh"
+  extras_source:
+    - "~/Projects/workerboss-extras/.workerboss-extras.zsh"
+    # - "~/Projects/workerboss-extras/.workerboss-outro.zsh"
 ```
 
 3. No Worker Boss: **Gerar .zprofile-auto**.
@@ -74,17 +72,19 @@ shell:
 
 ---
 
-## O que pôr no `workerboss-extras.zsh`
+## O que pôr em **`.workerboss-extras.zsh`**
 
-- Aliases e funções **multi-repo** ou ligados à tua máquina (`clone_repo`, `srp`, `VolleyTrackBack`, `update`, NVM, …).
-- Evita **duplicar** o que já está num `workerboss.yml` de um projeto (por exemplo o mesmo fluxo Docker que o atalho `volleytrack` já faz). Um único sítio por responsabilidade fica mais fácil de manter.
+- Aliases e funções **multi-repo** ou da tua máquina (`clone_repo`, `srp`, `VolleyTrackBack`, `update`, NVM, …).
+- Evita **duplicar** o que já está num `workerboss.yml` de um projeto.
+
+Podes acrescentar mais linhas na lista (outros `.zsh` ocultos no mesmo repo ou noutro path).
 
 ---
 
 ## Relação com o repositório `worker-boss`
 
-- O código do Worker Boss (incluindo `worker_boss.sh` e o template do `.zprofile-auto`) fica no clone **público** `~/Projects/worker-boss` (ou o caminho que usares).
-- Este repositório **workerboss-extras** pode ser privado, só teu, versionado à parte — não precisa de ir para o mesmo remote do Worker Boss.
-- O ficheiro `.zprofile-auto` **gerado** continua a viver dentro do projeto worker-boss (e costuma haver um symlink `~/.zprofile-auto` → esse ficheiro); o gerado inclui um ou mais `source` para os paths configurados quando o YAML na home está correto.
+- O código do Worker Boss fica no clone **público** `~/Projects/worker-boss` (ou o caminho que usares).
+- Este repo **workerboss-extras** pode ser privado e versionado à parte.
+- O `.zprofile-auto` **gerado** fica no projeto worker-boss (com symlink `~/.zprofile-auto` habitual).
 
-Se alterares só o conteúdo dos `.zsh` de extras (sem mudar a lista de paths no YAML), **não** precisas de voltar a gerar o `.zprofile-auto` — os `source` apontam para os ficheiros atuais. Só precisas de **regenerar** quando mudares atalhos nos `workerboss.yml` dos projetos, ou quando **adicionares, removeres ou reordenares** entradas em `shell.extras_source`.
+Se mudares só o **conteúdo** dos `.zsh` (sem alterar a lista no YAML), **não** precisas de regenerar o `.zprofile-auto`. Regenera quando mudares atalhos nos `workerboss.yml` dos projetos ou quando **mudares a lista** em `shell.extras_source`.
