@@ -12,7 +12,7 @@ O Worker Boss é a ferramenta que corre no teu PC (menu Whiptail, `worker_boss.s
 |--------|-----------|-----------------|
 | **1. Config global** | **`~/.workerboss.yml`** (oculto, na home) | `projects.dir`, `ignore_dirs`, e **`shell.extras_source`** como **lista** de paths para ficheiros Zsh. |
 | **2. Por repositório** | `workerboss.yml` dentro de cada projeto (ex.: `srp/`, `VoleiClub/`) | Atalhos daquele app: Docker, testes, recreate, helpers, etc. |
-| **3. Extras pessoais** | Este repo — vários **`.zsh` ocultos** | `clone_repo`, aliases multi-repo, `multiplier-*`, `update`, NVM/Go, etc. Separa por ficheiro (ex.: principal + `.workerboss-local.zsh` não partilhado ou vazio no git). |
+| **3. Extras pessoais** | Um ou mais repos/pastas teus — **`.zsh` ocultos** e, se quiseres, **`programs/`** com instaladores | `clone_repo`, aliases multi-repo, `multiplier-*`, `update`, NVM/Go, etc. Separa por ficheiro (ex.: principal + `.workerboss-local.zsh`). Os scripts de **instalação** do Worker Boss referenciam-se em **`install.programs_dir` como lista** no YAML (uma ou mais pastas); vê `programs/README.md` se usares esta pasta `programs/`. |
 
 O Worker Boss **não** executa os teus `.zsh` sozinho. O fluxo é:
 
@@ -53,18 +53,22 @@ flowchart LR
 
 ## Configuração rápida
 
-1. Clona este repo (ex.: `~/Projects/workerboss-extras`).
-2. No **`~/.workerboss.yml`**:
+1. Clona este repo para o sítio que preferires (o path importa para o YAML abaixo).
+2. No **`~/.workerboss.yml`**, ajusta os paths ao teu disco. `install.programs_dir` é **sempre uma lista** (mesmo que seja só um item); o mesmo clone pode aparecer em `extras_source` e nessa lista, ou podes usar paths de repos diferentes:
 
 ```yaml
 projects:
   dir: "~/Projects"
   ignore_dirs: []
 
+install:
+  programs_dir:
+    - "~/Projects/substitui-pelo-caminho-do-clone/programs"
+
 shell:
   extras_source:
-    - "~/Projects/workerboss-extras/.workerboss-extras.zsh"
-    # - "~/Projects/workerboss-extras/.workerboss-outro.zsh"
+    - "~/Projects/substitui-pelo-caminho-do-clone/.workerboss-extras.zsh"
+    # - "~/Projects/outro-repo/.outro.zsh"
 ```
 
 3. No Worker Boss: **Gerar .zprofile-auto**.
@@ -83,7 +87,7 @@ Podes acrescentar mais linhas na lista (outros `.zsh` ocultos no mesmo repo ou n
 
 ## Relação com o repositório `worker-boss`
 
-- O código do Worker Boss fica no clone **público** `~/Projects/worker-boss` (ou o caminho que usares).
+- O código do Worker Boss fica no clone público **worker-boss** (path que definires na tua máquina).
 - Este repo **workerboss-extras** pode ser privado e versionado à parte.
 - O `.zprofile-auto` **gerado** fica no projeto worker-boss (com symlink `~/.zprofile-auto` habitual).
 
