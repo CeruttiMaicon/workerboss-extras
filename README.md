@@ -1,32 +1,30 @@
 # workerboss-extras
 
-Repositório **pessoal** de shell (Zsh) que complementa o [Worker Boss](https://github.com/CeruttiMaicon/worker-boss): o conteúdo principal costuma ir em **`.workerboss-extras.zsh`** (ficheiro oculto); podes acrescentar outros **`.zsh` ocultos** (ex.: `.workerboss-local.zsh` só para esta máquina) e listar **todos** em `shell.extras_source` no **`~/.workerboss.yml`** — o Worker Boss gera um `source` por entrada, **na ordem da lista**.
+Repositório **pessoal** de shell (Zsh) que complementa o **[ZshMap](https://github.com/CeruttiMaicon/zsh-map)** (repo **`zsh-map`**): o conteúdo principal costuma ir em **`.workerboss-extras.zsh`** (ficheiro oculto); podes acrescentar outros **`.zsh` ocultos** (ex.: `.workerboss-local.zsh`) e listar **todos** em `shell.extras_source` no **`~/.zshmap.yml`** — o ZshMap gera um `source` por entrada, **na ordem da lista**.
 
 ---
 
-## Como isto encaixa no Worker Boss
+## Como isto encaixa no ZshMap
 
-O Worker Boss é a ferramenta que corre no teu PC (menu Whiptail, `worker_boss.sh`, etc.). Ele trabalha com **três camadas** de configuração; este repo é a **terceira**:
+O ZshMap é a ferramenta que corre no teu PC (menu Whiptail, `zsh-map.sh`, etc.). Trabalha com **três camadas** de configuração; este repo é a **terceira**:
 
 | Camada | Onde fica | O que guardas |
 |--------|-----------|-----------------|
-| **1. Config global** | **`~/.workerboss.yml`** (oculto, na home) | `projects.dir`, `ignore_dirs`, e **`shell.extras_source`** como **lista** de paths para ficheiros Zsh. |
-| **2. Por repositório** | `workerboss.yml` dentro de cada projeto (ex.: `srp/`, `VoleiClub/`) | Atalhos daquele app: Docker, testes, recreate, helpers, etc. |
-| **3. Extras pessoais** | Um ou mais repos/pastas teus — **`.zsh` ocultos** e, se quiseres, **`programs/`** com instaladores | `clone_repo`, aliases multi-repo, `multiplier-*`, `update`, NVM/Go, etc. Separa por ficheiro (ex.: principal + `.workerboss-local.zsh`). Os scripts de **instalação** do Worker Boss referenciam-se em **`install.programs_dir` como lista** no YAML (uma ou mais pastas); vê `programs/README.md` se usares esta pasta `programs/`. |
+| **1. Config global** | **`~/.zshmap.yml`** (oculto, na home) | `projects.dir`, `ignore_dirs`, **`install.programs_dir`** (lista), **`shell.extras_source`** (lista de paths Zsh). |
+| **2. Por repositório** | `workerboss.yml` dentro de cada projeto | Atalhos daquele app: Docker, testes, etc. |
+| **3. Extras pessoais** | Este repo — **`.zsh` ocultos** e, se quiseres, **`programs/`** | Aliases multi-repo, `multiplier-*`, `update`, etc. Scripts de instalação do menu apontam-se em **`install.programs_dir`**; vê `programs/README.md`. |
 
-O Worker Boss **não** executa os teus `.zsh` sozinho. O fluxo é:
+O ZshMap **não** executa os teus `.zsh` sozinho. O fluxo é:
 
-1. Em **`~/.workerboss.yml`** defines `shell.extras_source` como **lista** de caminhos (`~` ou absoluto). Cada entrada vira um `source` no `.zprofile-auto`, pela mesma ordem.
-2. No Worker Boss: **Gerar .zprofile-auto** (ou a função equivalente no script).
-3. O gerador lê os `workerboss.yml` dos projetos, monta as funções dos atalhos e, **no fim**, para cada path em `extras_source`, um bloco `if [ -r … ]; then . …; fi`.
-4. O Zsh carrega `~/.zprofile-auto` (normalmente via `~/.zshrc`). Primeiro o gerado; depois os teus ficheiros, **na ordem da lista**.
-
-Ficheiros mais abaixo na lista podem usar ou redefinir o que os anteriores definiram. O `.zprofile-auto` continua gerado — não o edites à mão.
+1. Em **`~/.zshmap.yml`**, `shell.extras_source` como **lista** de caminhos.
+2. No ZshMap: **Gerar .zprofile-auto**.
+3. O gerador lê os `workerboss.yml` dos projetos, monta as funções e, **no fim**, `source` condicional para cada extra.
+4. O Zsh carrega `~/.zprofile-auto` (normalmente via `~/.zshrc`).
 
 ```mermaid
 flowchart LR
   subgraph home [Home]
-    WB_YAML["~/.workerboss.yml"]
+    ZM_YAML["~/.zshmap.yml"]
     ZPA["~/.zprofile-auto"]
   end
   subgraph projects [Pasta projects.dir]
@@ -36,25 +34,25 @@ flowchart LR
   subgraph personal [Repo pessoal]
     EX[".zsh ocultos"]
   end
-  WB["Worker Boss\nGerar .zprofile-auto"]
+  ZM["ZshMap\nGerar .zprofile-auto"]
   ZSH["Zsh login / source"]
-  WB_YAML --> WB
-  PY1 --> WB
-  PY2 --> WB
-  WB --> ZPA
-  WB_YAML -->|"shell.extras_source lista"| ZPA
+  ZM_YAML --> ZM
+  PY1 --> ZM
+  PY2 --> ZM
+  ZM --> ZPA
+  ZM_YAML -->|"shell.extras_source"| ZPA
   EX -->|"source no fim"| ZPA
   ZPA --> ZSH
 ```
 
-**YAML:** `shell` tem de estar no **mesmo nível** que `projects`, nunca indentado *dentro* de `projects`.
+**YAML:** `shell` no **mesmo nível** que `projects`.
 
 ---
 
 ## Configuração rápida
 
-1. Clona este repo para o sítio que preferires (o path importa para o YAML abaixo).
-2. No **`~/.workerboss.yml`**, ajusta os paths ao teu disco. `install.programs_dir` é **sempre uma lista** (mesmo que seja só um item); o mesmo clone pode aparecer em `extras_source` e nessa lista, ou podes usar paths de repos diferentes:
+1. Clona este repo para o sítio que preferires.
+2. No **`~/.zshmap.yml`** (lista em `install.programs_dir` se usares scripts de instalação):
 
 ```yaml
 projects:
@@ -68,27 +66,24 @@ install:
 shell:
   extras_source:
     - "~/Projects/substitui-pelo-caminho-do-clone/.workerboss-extras.zsh"
-    # - "~/Projects/outro-repo/.outro.zsh"
 ```
 
-3. No Worker Boss: **Gerar .zprofile-auto**.
+3. No ZshMap: **Gerar .zprofile-auto**.
 4. Abre um terminal novo ou `source ~/.zprofile-auto`.
 
 ---
 
 ## O que pôr em **`.workerboss-extras.zsh`**
 
-- Aliases e funções **multi-repo** ou da tua máquina (`clone_repo`, `srp`, `VolleyTrackBack`, `update`, NVM, …).
+- Aliases e funções **multi-repo** ou da tua máquina.
 - Evita **duplicar** o que já está num `workerboss.yml` de um projeto.
-
-Podes acrescentar mais linhas na lista (outros `.zsh` ocultos no mesmo repo ou noutro path).
 
 ---
 
-## Relação com o repositório `worker-boss`
+## Relação com o repositório **zsh-map**
 
-- O código do Worker Boss fica no clone público **worker-boss** (path que definires na tua máquina).
-- Este repo **workerboss-extras** pode ser privado e versionado à parte.
-- O `.zprofile-auto` **gerado** fica no projeto worker-boss (com symlink `~/.zprofile-auto` habitual).
+- O código do ZshMap fica no clone **`zsh-map`** (path que definires).
+- Este repo **workerboss-extras** pode ser privado.
+- O `.zprofile-auto` **gerado** fica no clone do **zsh-map** (symlink `~/.zprofile-auto` habitual).
 
-Se mudares só o **conteúdo** dos `.zsh` (sem alterar a lista no YAML), **não** precisas de regenerar o `.zprofile-auto`. Regenera quando mudares atalhos nos `workerboss.yml` dos projetos ou quando **mudares a lista** em `shell.extras_source`.
+Regenera o `.zprofile-auto` quando mudares atalhos nos `workerboss.yml` ou a lista em `shell.extras_source`.

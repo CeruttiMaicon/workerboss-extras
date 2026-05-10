@@ -1,6 +1,6 @@
-# .workerboss-extras.zsh — shell pessoal carregado pelo .zprofile-auto (Worker Boss)
+# .workerboss-extras.zsh — shell pessoal carregado pelo .zprofile-auto (ZshMap)
 #
-# Configuração: em ~/.workerboss.yml usa shell.extras_source (lista) com o caminho deste ficheiro.
+# Configuração: em ~/.zshmap.yml usa shell.extras_source (lista) com o caminho deste ficheiro.
 # Não dupliques aqui o que já está nos workerboss.yml dos projetos (Docker, testes, etc.).
 #
 # Exemplos do que costuma ir aqui: clone_repo, aliases multi-repo, multiplier-*, update, NVM.
@@ -36,13 +36,13 @@ fi
 export sufixo="_masked"
 
 alias ohmyzsh="code ~/.oh-my-zsh"
-alias zshprofile="code ~/Projects/worker-boss/.zprofile"
+alias zshprofile="code ~/Projects/zsh-map/.zprofile"
 alias zshconfig="code ~/.zshrc"
 alias conf-neovim="code ~/.config/nvim/init.vim"
 alias conf-vim="code ~/.vimrc"
 
-alias worker-boss-exec="cd ~/Projects/worker-boss/ && ./worker_boss.sh"
-alias worker-boss-update="worker-boss-update"
+alias zsh-map-exec="cd ~/Projects/zsh-map/ && ./zsh-map.sh"
+alias zsh-map-update="zsh-map-update"
 
 # Multiplier Aplicação
 alias multiplier-code="srp && code ."
@@ -60,7 +60,7 @@ alias srp-deploy="clone_repo ~/Projects/srp-deploy git@github.com:multiplierx/sr
 alias srp-docs="clone_repo ~/Projects/srp-docs git@github.com:multiplierx/srp-docs.git && cd ~/Projects/srp-docs"
 alias email="clone_repo ~/Projects/email git@github.com:multiplierx/email.git && cd ~/Projects/email"
 alias front="clone_repo ~/Projects/front git@github.com:multiplierx/front.git && cd ~/Projects/front"
-alias worker-boss="clone_repo ~/Projects/worker-boss git@github.com:CeruttiMaicon/worker-boss.git && cd ~/Projects/worker-boss"
+alias zsh-map="clone_repo ~/Projects/zsh-map git@github.com:CeruttiMaicon/zsh-map.git && cd ~/Projects/zsh-map"
 alias VolleyTrackBack="clone_repo ~/Projects/VoleiClub git@github.com:Zoren-Software/VolleyTrack-Back.git && cd ~/Projects/VoleiClub"
 alias VolleyTrackFront="clone_repo ~/Projects/VoleiClub-Front git@github.com:Zoren-Software/VolleyTrack-Front.git && cd ~/Projects/VoleiClub-Front"
 alias VolleyTrackDocs="clone_repo ~/Projects/Zoren-Software.github.io git@github.com:Zoren-Software/Zoren-Software.github.io.git && cd ~/Projects/Zoren-Software.github.io"
@@ -94,11 +94,10 @@ function notificar() {
     fi
 
     # criar variavel com o caminho da imagem
-    # /home/maicon/Projects/worker-boss/images/test_tube.png
-    # mas de um jeito que fique dinamico no projeto
-    icone_path="$HOME/Projects/worker-boss/images/$icone.png";
+    # Imagens em ~/Projects/zsh-map/images/ (ajusta se o clone estiver outro sítio)
+    icone_path="$HOME/Projects/zsh-map/images/$icone.png";
 
-    notify-send -i "$icone_path" "$titulo" "$mensagem" --app-name="Worker Boss" --urgency=normal --expire-time=500
+    notify-send -i "$icone_path" "$titulo" "$mensagem" --app-name="ZshMap" --urgency=normal --expire-time=500
 }
 
 trap clean_up SIGINT
@@ -329,18 +328,18 @@ function update() {
 
   update-system
 
-  worker-boss-update
+  zsh-map-update
 }
 
-# Função para testar a atualização do worker-boss localmente
-function worker-boss-update() {
-  echo -e "\033[0;36m🧪 Testando atualização do worker-boss...\033[0m"
+# Função para atualizar o clone do zsh-map (git pull)
+function zsh-map-update() {
+  echo -e "\033[0;36m🧪 Atualizando o repositório zsh-map...\033[0m"
   
   # Salva o diretório atual
   local current_dir=$(pwd)
   
-  # Vai para o diretório do worker-boss
-  worker-boss
+  # Vai para o diretório do zsh-map
+  zsh-map
   
   # Verifica se é um repositório git
   if [ ! -d ".git" ]; then
