@@ -1,7 +1,7 @@
-# .workerboss-extras.zsh — shell pessoal carregado pelo .zprofile-auto (ZshMap)
+# .zshmap-extras.zsh — shell pessoal carregado pelo .zprofile-auto (ZshMap)
 #
 # Configuração: em ~/.zshmap.yml usa shell.extras_source (lista) com o caminho deste ficheiro.
-# Não dupliques aqui o que já está nos workerboss.yml dos projetos (Docker, testes, etc.).
+# Não dupliques aqui o que já está nos zshmap.yml dos projetos (Docker, testes, etc.).
 #
 # Exemplos do que costuma ir aqui: clone_repo, aliases multi-repo, multiplier-*, update, NVM.
 
