@@ -371,6 +371,10 @@ function zsh-map-update() {
   cd "$current_dir"
 }
 
+cd() {
+    builtin cd "$@" && ls
+}
+
 function verificar_dependencia() {
     local comando="$1"
 
