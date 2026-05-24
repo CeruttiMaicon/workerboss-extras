@@ -66,6 +66,7 @@ alias VolleyTrackFront="clone_repo ~/Projects/VoleiClub-Front git@github.com:Zor
 alias VolleyTrackDocs="clone_repo ~/Projects/Zoren-Software.github.io git@github.com:Zoren-Software/Zoren-Software.github.io.git && cd ~/Projects/Zoren-Software.github.io"
 alias LandingPageBack="clone_repo ~/Projects/LandingPage-BackEnd-VoleiClub git@github.com:Zoren-Software/LandingPage-BackEnd-VoleiClub.git && cd ~/Projects/LandingPage-BackEnd-VoleiClub"
 alias LandingPageFront="clone_repo ~/Projects/LandingPage-FrontEnd-VoleiClub git@github.com:Zoren-Software/LandingPage-FrontEnd-VoleiClub.git && cd ~/Projects/LandingPage-FrontEnd-VoleiClub"
+alias ZapSenderPlugin="clone_repo ~/Projects/zap-sender git@github.com:Zoren-Software/zap-sender.git && cd ~/Projects/zap-sender"
 
 # Atalhos
 alias cl="clear"
