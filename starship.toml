@@ -6,7 +6,7 @@
 
 # $php = binário local; ${custom.php-project} = require.php do composer.json
 format = """
-[┌](bold blue)$os$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
+[┌](bold blue)$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
 [└](bold blue) """
 
 [username]
@@ -18,18 +18,10 @@ disabled = false
 style = "bold blue"
 format = "[$symbol]($style) "
 
-[os.symbols]
-Ubuntu = "🐧"
-Linux = "🐧"
-
-[directory]
-truncation_length = 2
-truncation_symbol = ".../"
-truncate_to_repo = false
-style = "bold cyan"
 
 [git_branch]
-symbol = " "
+# 󰘬 = ícone de branch (Nerd Font); padrão Starship: 
+symbol = "󰘬 "
 style = "bold purple"
 format = "on [$symbol$branch(:$remote_branch)]($style) "
 
@@ -57,17 +49,6 @@ up_to_date = ""
 [character]
 success_symbol = "[❯](bold blue)"
 error_symbol = "[❯](bold red)"
-
-
-# 10ms era curto demais para módulos custom (jq/grep). Padrão Starship: 30 / 500.
-scan_timeout = 50
-command_timeout = 800
-
-# Disable the blank line at the start of the prompt
-add_newline = false
-
-# Set 'foo' as custom color palette
-palette = 'foo'
 
 # Define custom colors
 [palettes.foo]
