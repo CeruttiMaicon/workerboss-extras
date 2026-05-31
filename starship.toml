@@ -4,12 +4,15 @@
 
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Canto direito: tempo de execução (se > min_time) + horário
-right_format = "$cmd_duration$time"
+scan_timeout = 50
+command_timeout = 800
+add_newline = false
 
-# $php = binário local; ${custom.php-project} = require.php do composer.json
+# Tudo na 1ª linha; $fill empurra duração/hora/bateria para a direita
+right_format = ""
+
 format = """
-$os$username$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
+$os$username$hostname$directory$git_branch$git_status$package$nodejs$rust$golang$php${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$time$battery
 [╰─](bold blue) $character"""
 
 [username]
@@ -29,11 +32,24 @@ disabled = false
 style = "bold blue"
 format = "[╭─](bold blue) "
 
+
+[package]
+format = "📦 [$version]($style) "
+version_format = "${raw}"
+display_private = true
+style = "bold 208"
+
+[fill]
+symbol = " "
+style = "bold black"
+
 [git_branch]
 # 󰘬 = ícone de branch (Nerd Font); padrão Starship: 
 symbol = "󰘬 "
 style = "bold purple"
 format = "on [$symbol$branch(:$remote_branch)]($style) "
+truncation_length = 28
+truncation_symbol = "…"
 
 # Estado do repo (estilo Powerlevel10k): staged, alterado, untracked, pull/push pendentes
 [git_status]
@@ -69,6 +85,31 @@ time_format = "%H:%M:%S"
 format = "⏰ [$time]($style) "
 style = "bold 245"
 
+[battery]
+full_symbol = "🔋 "
+charging_symbol = "⚡ "
+discharging_symbol = "💀 "
+format = "[$symbol$percentage]($style) "
+disabled = false
+
+[[battery.display]]
+threshold = 20
+style = "bold red"
+
+[docker_context]
+format = "via [🐳 $context](bold blue) "
+only_with_files = true
+
+[custom.docker-compose]
+description = "Containers do docker compose (diretório atual)"
+detect_files = ["docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"]
+shell = ["bash", "--noprofile", "-c"]
+use_stdin = false
+ignore_timeout = true
+when = "false"
+command = 'bash "$HOME/Projects/zshmap-extras/bin/starship-docker-compose-status.sh" 2>/dev/null'
+format = "🐳 [containers: $output](bold blue) "
+
 [character]
 success_symbol = "[❯](bold blue) "
 error_symbol = "[❯](bold red) "
@@ -79,16 +120,6 @@ error_symbol = "[❯](bold red) "
 blue = '21'
 # Define new color
 mustard = '#af8700'
-
-# ~/.config/starship.toml
-
-[battery]
-full_symbol = '🔋 '
-charging_symbol = '⚡️ '
-
-[[battery.display]]
-threshold = 10
-style = 'bold red'
 
 # PHP instalado no host (`php` no PATH)
 [php]
