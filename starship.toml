@@ -6,18 +6,26 @@
 
 # $php = binário local; ${custom.php-project} = require.php do composer.json
 format = """
-[┌](bold blue)$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
+[┌](bold blue) $username$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
 [└](bold blue) """
 
 [username]
-disabled = true
+disabled = false
+show_always = true
+style_user = "bold fg:39"
+style_root = "bold red"
+format = "[$user]($style)"
 
-# Ícone do SO (🐧) no lugar do nome de usuário
+[hostname]
+disabled = false
+format = "[@$hostname](bold 245) "
+ssh_only = false
+
+# Ícone do SO (🐧)
 [os]
 disabled = false
 style = "bold blue"
 format = "[$symbol]($style) "
-
 
 [git_branch]
 # 󰘬 = ícone de branch (Nerd Font); padrão Starship: 
