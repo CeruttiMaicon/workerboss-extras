@@ -46,7 +46,7 @@ style = "bold black"
 [git_branch]
 # 󰘬 = ícone de branch (Nerd Font); padrão Starship: 
 symbol = "󰘬 "
-style = "bold purple"
+style = "bold 208"
 format = "on [$symbol$branch(:$remote_branch)]($style) "
 truncation_length = 28
 truncation_symbol = "…"
