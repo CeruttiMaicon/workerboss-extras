@@ -12,7 +12,7 @@ add_newline = false
 right_format = ""
 
 format = """
-$os$username$hostname$directory$git_branch$git_status$package$nodejs$rust$golang$php${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$time$battery
+$os$username$hostname$directory${custom.laravel}$git_branch$git_status$package$nodejs$rust$golang$php${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$time$battery
 [╰─](bold blue) $character"""
 
 [username]
@@ -99,6 +99,15 @@ style = "bold red"
 [docker_context]
 format = "via [🐳 $context](bold blue) "
 only_with_files = true
+
+[custom.laravel]
+description = "Ícone Laravel (artisan + laravel/framework)"
+detect_files = ["artisan", "composer.json"]
+shell = ["bash", "--noprofile", "-c"]
+use_stdin = false
+when = "false"
+command = 'bash "$HOME/Projects/zshmap-extras/bin/starship-laravel-icon.sh" 2>/dev/null'
+format = "[$output](bold 208) "
 
 [custom.docker-compose]
 description = "Containers do docker compose (diretório atual)"
