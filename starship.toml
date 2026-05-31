@@ -4,10 +4,13 @@
 
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Canto direito: tempo de execução (se > min_time) + horário
+right_format = "$cmd_duration$time"
+
 # $php = binário local; ${custom.php-project} = require.php do composer.json
 format = """
-[┌](bold blue) $username$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
-[└](bold blue) """
+$os$username$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
+[╰─](bold blue) $character"""
 
 [username]
 disabled = false
@@ -21,11 +24,10 @@ disabled = false
 format = "[@$hostname](bold 245) "
 ssh_only = false
 
-# Ícone do SO (🐧)
 [os]
 disabled = false
 style = "bold blue"
-format = "[$symbol]($style) "
+format = "[╭─](bold blue) "
 
 [git_branch]
 # 󰘬 = ícone de branch (Nerd Font); padrão Starship: 
@@ -54,9 +56,22 @@ behind = "[⇣${count}](bold red)"
 diverged = "[⇕⇡${ahead_count}⇣${behind_count}](bold yellow)"
 up_to_date = ""
 
+[cmd_duration]
+min_time = 1000
+show_milliseconds = false
+format = "⏱  [$duration]($style) "
+style = "bold yellow"
+
+[time]
+disabled = false
+use_12hr = false
+time_format = "%H:%M:%S"
+format = "⏰ [$time]($style) "
+style = "bold 245"
+
 [character]
-success_symbol = "[❯](bold blue)"
-error_symbol = "[❯](bold red)"
+success_symbol = "[❯](bold blue) "
+error_symbol = "[❯](bold red) "
 
 # Define custom colors
 [palettes.foo]
