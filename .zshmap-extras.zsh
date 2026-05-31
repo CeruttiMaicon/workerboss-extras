@@ -61,6 +61,7 @@ alias srp-docs="clone_repo ~/Projects/srp-docs git@github.com:multiplierx/srp-do
 alias email="clone_repo ~/Projects/email git@github.com:multiplierx/email.git && cd ~/Projects/email"
 alias front="clone_repo ~/Projects/front git@github.com:multiplierx/front.git && cd ~/Projects/front"
 alias zsh-map="clone_repo ~/Projects/zsh-map git@github.com:CeruttiMaicon/zsh-map.git && cd ~/Projects/zsh-map"
+alias zshmap-extras="clone_repo ~/Projects/zshmap-extras git@github.com:CeruttiMaicon/zshmap-extras.git && cd ~/Projects/zshmap-extras"
 alias VolleyTrackBack="clone_repo ~/Projects/VoleiClub git@github.com:Zoren-Software/VolleyTrack-Back.git && cd ~/Projects/VoleiClub"
 alias VolleyTrackFront="clone_repo ~/Projects/VoleiClub-Front git@github.com:Zoren-Software/VolleyTrack-Front.git && cd ~/Projects/VoleiClub-Front"
 alias VolleyTrackDocs="clone_repo ~/Projects/Zoren-Software.github.io git@github.com:Zoren-Software/Zoren-Software.github.io.git && cd ~/Projects/Zoren-Software.github.io"
