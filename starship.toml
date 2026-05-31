@@ -23,16 +23,36 @@ Ubuntu = "🐧"
 Linux = "🐧"
 
 [directory]
-truncation_length = 3
-truncate_to_repo = true
+truncation_length = 2
+truncation_symbol = ".../"
+truncate_to_repo = false
 style = "bold cyan"
 
 [git_branch]
 symbol = " "
 style = "bold purple"
+format = "on [$symbol$branch(:$remote_branch)]($style) "
 
+# Estado do repo (estilo Powerlevel10k): staged, alterado, untracked, pull/push pendentes
 [git_status]
-style = "bold red"
+format = "([$all_status $ahead_behind]($style) )"
+style = "bold white"
+conflicted = "[=](bold red)"
+stashed = "[$](bold yellow)"
+deleted = "[✘${count}](bold red)"
+renamed = "[»${count}](bold purple)"
+staged = "[+${count}](bold green)"
+index_modified = "[●${count}](bold green)"
+index_added = "[+${count}](bold green)"
+index_deleted = "[✘${count}](bold red)"
+modified = "[!${count}](bold yellow)"
+worktree_modified = "[!${count}](bold yellow)"
+untracked = "[?${count}](bold cyan)"
+worktree_added = "[?${count}](bold cyan)"
+ahead = "[⇡${count}](bold green)"
+behind = "[⇣${count}](bold red)"
+diverged = "[⇕⇡${ahead_count}⇣${behind_count}](bold yellow)"
+up_to_date = ""
 
 [character]
 success_symbol = "[❯](bold blue)"
