@@ -6,15 +6,21 @@
 
 # $php = binário local; ${custom.php-project} = require.php do composer.json
 format = """
-[┌](bold blue)$username$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
+[┌](bold blue)$os$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
 [└](bold blue) """
 
 [username]
-style_user = "bold blue"
-style_root = "bold red"
-format = "[$user]($style) "
+disabled = true
+
+# Ícone do SO (🐧) no lugar do nome de usuário
+[os]
 disabled = false
-show_always = true
+style = "bold blue"
+format = "[$symbol]($style) "
+
+[os.symbols]
+Ubuntu = "🐧"
+Linux = "🐧"
 
 [directory]
 truncation_length = 3
