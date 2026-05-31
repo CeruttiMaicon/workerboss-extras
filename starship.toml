@@ -1,0 +1,75 @@
+# Configuração do Starship (versionada em zshmap-extras).
+# Edite aqui; o symlink em ~/.config/starship.toml aponta para este ficheiro.
+# Docs: https://starship.rs/config/
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# $php = binário local; ${custom.php-project} = require.php do composer.json
+format = """
+[┌](bold blue)$username$hostname$directory$git_branch$git_status$nodejs$rust$golang$php${custom.php-project}$docker_context
+[└](bold blue) """
+
+[username]
+style_user = "bold blue"
+style_root = "bold red"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "bold cyan"
+
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+[git_status]
+style = "bold red"
+
+[character]
+success_symbol = "[❯](bold blue)"
+error_symbol = "[❯](bold red)"
+
+
+# 10ms era curto demais para módulos custom (jq/grep). Padrão Starship: 30 / 500.
+scan_timeout = 50
+command_timeout = 800
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+# Set 'foo' as custom color palette
+palette = 'foo'
+
+# Define custom colors
+[palettes.foo]
+# Overwrite existing color
+blue = '21'
+# Define new color
+mustard = '#af8700'
+
+# ~/.config/starship.toml
+
+[battery]
+full_symbol = '🔋 '
+charging_symbol = '⚡️ '
+
+[[battery.display]]
+threshold = 10
+style = 'bold red'
+
+# PHP instalado no host (`php` no PATH)
+[php]
+format = "via [php local $version](242) "
+
+# PHP exigido pelo projeto (composer.json → require.php)
+[custom.php-project]
+description = "PHP do projeto (composer.json)"
+detect_files = ["composer.json"]
+format = "[php $output](147 bold) "
+use_stdin = false
+shell = ["bash", "--noprofile", "-c"]
+when = "command -v jq >/dev/null 2>&1 && jq -e '.require.php' composer.json >/dev/null 2>&1"
+command = "jq -r '.require.php' composer.json 2>/dev/null"
