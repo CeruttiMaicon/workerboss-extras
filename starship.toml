@@ -8,11 +8,12 @@ scan_timeout = 50
 command_timeout = 800
 add_newline = false
 
-# Tudo na 1ª linha; $fill empurra duração/hora/bateria para a direita
-right_format = ""
+# 1ª linha: contexto; $fill empurra duração/bateria à direita
+# 2ª linha: ╰─ + ❯ (cursor aqui); relógio à direita via RPROMPT (right_format)
+right_format = "$time"
 
 format = """
-$os$username$hostname$directory${custom.laravel}$git_branch$git_status$package$nodejs$rust$golang$php${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$time$battery
+$os$username$hostname$directory${custom.laravel}$git_branch$git_status$package${custom.nodejs}$rust$golang$php${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery
 [╰─](bold blue) $character"""
 
 [username]
@@ -101,6 +102,21 @@ style = "bold red"
 format = "via [🐳 $context](bold blue) "
 only_with_files = true
 
+# Node nativo não suporta `when`; usamos custom.nodejs com a mesma regra Laravel
+[nodejs]
+disabled = true
+
+[custom.nodejs]
+description = "Node.js (só em projeto Node; oculto em Laravel)"
+# detect_* omitido: o `when` abaixo decide tudo (Starship mostra só com when=0 mesmo sem ficheiros)
+shell = ["bash", "--noprofile", "-c"]
+use_stdin = false
+when = 'bash "$HOME/Projects/zshmap-extras/bin/starship-should-show-nodejs.sh"'
+command = "node --version 2>/dev/null | tr -d '\\n\\r'"
+format = "via [$symbol$output ]($style) "
+symbol = " "
+style = "bold green"
+
 [custom.laravel]
 description = "Ícone Laravel (artisan + laravel/framework)"
 detect_files = ["artisan", "composer.json"]
@@ -108,7 +124,7 @@ shell = ["bash", "--noprofile", "-c"]
 use_stdin = false
 when = "false"
 command = 'bash "$HOME/Projects/zshmap-extras/bin/starship-laravel-icon.sh" 2>/dev/null'
-format = "[$output](bold 208) "
+format = "[$output](bold red) "
 
 [custom.docker-compose]
 description = "Containers do docker compose (diretório atual)"

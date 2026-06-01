@@ -3,18 +3,10 @@
 
 set -euo pipefail
 
-[[ -f artisan && -f composer.json ]] || exit 1
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+"$script_dir/starship-is-laravel-project.sh" || exit 1
 
-if command -v jq >/dev/null 2>&1; then
-  jq -e '
-    .require["laravel/framework"]
-    // .require["laravel/lumen-framework"]
-  ' composer.json >/dev/null 2>&1 || exit 1
-else
-  grep -qE '"laravel/framework"|"laravel/lumen-framework"' composer.json 2>/dev/null || exit 1
-fi
-
-repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+repo_root="$(cd "$script_dir/.." && pwd)"
 icon_file="$repo_root/icons/laravel.icon"
 
 if [[ -f "$icon_file" ]]; then

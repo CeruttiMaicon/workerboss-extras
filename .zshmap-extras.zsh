@@ -429,7 +429,8 @@ function clone_repo() {
     fi
 }
 
-# Starship
+# Starship (RPROMPT: relógio à direita na 2ª linha sem mover o cursor)
+export ZLE_RPROMPT_INDENT=0
 eval "$(starship init zsh)"
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
