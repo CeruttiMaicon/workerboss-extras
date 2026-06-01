@@ -76,7 +76,7 @@ up_to_date = ""
 
 [cmd_duration]
 min_time = 1000
-show_milliseconds = false
+show_milliseconds = true
 format = "⏱  [$duration]($style) "
 style = "bold yellow"
 
