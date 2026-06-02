@@ -374,9 +374,29 @@ function zsh-map-update() {
   cd "$current_dir"
 }
 
-cd() {
-    builtin cd "$@" && ls
-}
+# ls após cd só quando você digita "cd" no prompt (não em scripts/funções)
+if [[ -o interactive ]]; then
+  autoload -Uz add-zsh-hook
+  typeset -g _ZSHMAP_CD_LS_PENDING=0
+
+  _zshmap_preexec_cd_ls() {
+    if [[ "$1" =~ '^[[:space:]]*cd([[:space:]]|;|&&|$)' ]]; then
+      _ZSHMAP_CD_LS_PENDING=1
+    else
+      _ZSHMAP_CD_LS_PENDING=0
+    fi
+  }
+
+  _zshmap_chpwd_ls() {
+    if (( _ZSHMAP_CD_LS_PENDING )); then
+      _ZSHMAP_CD_LS_PENDING=0
+      ls
+    fi
+  }
+
+  add-zsh-hook preexec _zshmap_preexec_cd_ls
+  add-zsh-hook chpwd _zshmap_chpwd_ls
+fi
 
 function verificar_dependencia() {
     local comando="$1"
