@@ -8,14 +8,14 @@ scan_timeout = 50
 command_timeout = 800
 add_newline = false
 
-# 1ª linha: utilizador, diretório, stacks (sem git); $fill → duração/bateria à direita
-# 2ª linha: branch + estado do repositório
+# 1ª linha: utilizador + diretório completo, stacks (sem git); $fill → duração/bateria à direita
+# 2ª linha: branch + estado do repositório + indicador de assinatura
 # 3ª linha: ╰─ + ❯; relógio à direita via RPROMPT (right_format)
 right_format = "$time"
 
 format = """
-$os$username$hostname$directory${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery
-[│](bold blue) $git_branch$git_status
+$os$username $directory${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery
+[│](bold blue) $git_branch$git_status${custom.git-signing}
 [╰─](bold blue) $character"""
 
 [username]
@@ -34,6 +34,13 @@ ssh_only = false
 disabled = false
 style = "bold blue"
 format = "[╭─](bold blue) "
+
+[directory]
+format = "[$path]($style) "
+home_symbol = ""
+truncation_length = 0
+truncate_to_repo = false
+substitutions = { "/Projects/" = "Project: 💼 " }
 
 
 [package]
@@ -73,6 +80,14 @@ ahead = "[⇡${count}](bold green) "
 behind = "[⇣${count}](bold red) "
 diverged = "[⇕⇡${ahead_count}⇣${behind_count}](bold yellow) "
 up_to_date = ""
+
+[custom.git-signing]
+description = "Indicador de commit assinado (commit.gpgsign)"
+shell = ["bash", "--noprofile", "-c"]
+use_stdin = false
+when = "true"
+command = 'git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 1; if git config --bool --get commit.gpgsign >/dev/null 2>&1; then if [[ "$(git config --bool --get commit.gpgsign 2>/dev/null)" == "true" ]]; then printf "🔏"; else printf "🔓"; fi; else printf "🔓?"; fi'
+format = "[$output](bold green) "
 
 [cmd_duration]
 min_time = 1000
@@ -148,8 +163,13 @@ blue = '21'
 mustard = '#af8700'
 
 # PHP instalado no host (`php` no PATH)
-[php]
-format = "via [php local $version](242) "
+[custom.php-local]
+description = "PHP instalado no host"
+shell = ["bash", "--noprofile", "-c"]
+use_stdin = false
+when = "command -v php >/dev/null 2>&1"
+command = "php -r 'echo PHP_VERSION;' 2>/dev/null"
+format = "via [php local $output](242) "
 
 # PHP exigido pelo projeto (composer.json → require.php)
 [custom.php-project]
