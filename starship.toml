@@ -14,7 +14,7 @@ add_newline = false
 right_format = "$time"
 
 format = """
-$os$username ${custom.path_display}${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-local}${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery${vcs}
+$os${custom.path_display}${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-local}${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery${vcs}
 [╰─](bold blue)$sudo$status$character"""
 
 [username]
