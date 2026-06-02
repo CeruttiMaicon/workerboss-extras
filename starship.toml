@@ -16,7 +16,7 @@ right_format = "$time"
 format = """
 $os$username $directory${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-local}${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery
 [│](bold blue) $git_branch$git_status$git_metrics${custom.git-signing}
-[╰─](bold blue) $sudo$status $character"""
+[╰─](bold blue)$sudo$status $character"""
 
 [username]
 disabled = false
@@ -90,7 +90,8 @@ only_nonzero_diffs = true
 
 [sudo]
 disabled = false
-symbol = "🧙 "
+format = "[$symbol]($style) "
+symbol = "🧙"
 
 [status]
 disabled = false
@@ -175,8 +176,8 @@ command = 'bash "${ZSHMAP_EXTRAS_DIR:-$HOME/Projects/zshmap-extras}/bin/starship
 format = "🐳 [containers: $output](bold blue) "
 
 [character]
-success_symbol = "[❯](bold blue) "
-error_symbol = "[❯](bold red) "
+success_symbol = "[❯](bold blue)"
+error_symbol = "[❯](bold red)"
 
 # Define custom colors
 [palettes.foo]
