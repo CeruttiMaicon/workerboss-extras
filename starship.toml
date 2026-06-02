@@ -14,8 +14,7 @@ add_newline = false
 right_format = "$time"
 
 format = """
-$os$username ${custom.path_display}${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-local}${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery
-[│](bold blue) $git_branch$git_status$git_metrics${custom.git-signing}
+$os$username ${custom.path_display}${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-local}${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery${vcs}
 [╰─](bold blue)$sudo$status$character"""
 
 [username]
@@ -79,6 +78,9 @@ format = "([+${added}]($added_style) )([-${deleted}]($deleted_style) )"
 added_style = "bold green"
 deleted_style = "bold red"
 only_nonzero_diffs = true
+
+[vcs]
+git_modules = "\n[│](bold blue) $git_branch$git_status$git_metrics${custom.git-signing}"
 
 [sudo]
 disabled = false
