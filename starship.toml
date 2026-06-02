@@ -111,7 +111,7 @@ description = "Node.js (só em projeto Node; oculto em Laravel)"
 # detect_* omitido: o `when` abaixo decide tudo (Starship mostra só com when=0 mesmo sem ficheiros)
 shell = ["bash", "--noprofile", "-c"]
 use_stdin = false
-when = 'bash "$HOME/Projects/zshmap-extras/bin/starship-should-show-nodejs.sh"'
+when = 'bash "${ZSHMAP_EXTRAS_DIR:-$HOME/Projects/zshmap-extras}/bin/starship-should-show-nodejs.sh"'
 command = "node --version 2>/dev/null | tr -d '\\n\\r'"
 format = "via [$symbol$output ]($style) "
 symbol = " "
@@ -123,7 +123,7 @@ detect_files = ["artisan", "composer.json"]
 shell = ["bash", "--noprofile", "-c"]
 use_stdin = false
 when = "false"
-command = 'bash "$HOME/Projects/zshmap-extras/bin/starship-laravel-icon.sh" 2>/dev/null'
+command = 'bash "${ZSHMAP_EXTRAS_DIR:-$HOME/Projects/zshmap-extras}/bin/starship-laravel-icon.sh" 2>/dev/null'
 format = "[$output](bold red) "
 
 [custom.docker-compose]
@@ -133,7 +133,7 @@ shell = ["bash", "--noprofile", "-c"]
 use_stdin = false
 ignore_timeout = true
 when = "false"
-command = 'bash "$HOME/Projects/zshmap-extras/bin/starship-docker-compose-status.sh" 2>/dev/null'
+command = 'bash "${ZSHMAP_EXTRAS_DIR:-$HOME/Projects/zshmap-extras}/bin/starship-docker-compose-status.sh" 2>/dev/null'
 format = "🐳 [containers: $output](bold blue) "
 
 [character]
