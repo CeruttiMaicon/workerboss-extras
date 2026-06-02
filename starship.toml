@@ -14,7 +14,7 @@ add_newline = false
 right_format = "$time"
 
 format = """
-$os$username $directory${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-local}${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery
+$os$username ${custom.path_display}${custom.laravel}$package${custom.nodejs}$rust$golang$php${custom.php-local}${custom.php-project}${custom.docker-compose}$docker_context$fill$cmd_duration$battery
 [│](bold blue) $git_branch$git_status$git_metrics${custom.git-signing}
 [╰─](bold blue)$sudo$status$character"""
 
@@ -34,14 +34,6 @@ ssh_only = false
 disabled = false
 style = "bold blue"
 format = "[╭─](bold blue) "
-
-[directory]
-format = "[$path]($style) "
-home_symbol = ""
-truncation_length = 0
-truncate_to_repo = false
-substitutions = { "/Projects/" = "Project: 💼 " }
-
 
 [package]
 format = "📦 [$version]($style) "
@@ -112,6 +104,22 @@ use_stdin = false
 when = "true"
 command = 'git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 1; if git config --bool --get commit.gpgsign >/dev/null 2>&1; then if [[ "$(git config --bool --get commit.gpgsign 2>/dev/null)" == "true" ]]; then printf "🔏"; else printf "🔓"; fi; else printf "🔓?"; fi'
 format = "[$output](bold green) "
+
+[custom.path_display]
+description = "Caminho com regra especial para Projects e Documents"
+shell = ["bash", "--noprofile", "-c"]
+use_stdin = false
+when = "true"
+command = '''
+if [[ "$PWD" == "$HOME" ]]; then
+	printf '🏠 ~/'
+elif [[ "$PWD" == "$HOME/Projects/"* ]]; then
+	printf 'Project: 💼 %s' "${PWD#"$HOME/Projects/"}"
+else
+	printf '📂 ~/%s' "${PWD#"$HOME/"}"
+fi
+'''
+format = "[$output]($style) "
 
 [cmd_duration]
 min_time = 1000
