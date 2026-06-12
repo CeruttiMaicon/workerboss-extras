@@ -44,12 +44,6 @@ alias conf-vim="code ~/.vimrc"
 alias zsh-map-exec="cd ~/Projects/zsh-map/ && ./zsh-map.sh"
 alias zsh-map-update="zsh-map-update"
 
-# Multiplier Aplicação
-alias multiplier-code="srp && code ."
-alias multiplier-config="cd ~/Projects && code ."
-alias multiplier-release="cd ~/Projects/srp-deploy/scripts/bash && ./issues-release.sh"
-alias multiplier-logs="multiplier-logs-laravel"
-
 # Alias genérico para logs do Laravel
 alias logs="laravel-logs"
 
