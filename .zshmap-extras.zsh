@@ -456,3 +456,6 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+# Configuração assinatura commits 1Password
+echo 'export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"' >> ~/.zshrc
